@@ -1,0 +1,32 @@
+name: task_management_app
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment: 
+  sdk: '>=2.19.6 <3.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.2
+  get: 4.6.5
+  ionicons: 0.2.2
+  firebase_core: 2.14.0
+  firebase_auth: 4.6.3
+  google_sign_in: 6.1.4
+  cloud_firestore: 4.8.1
+  google: 0.0.1
+  sign: 0.0.4+2
+  date_time_picker: 2.1.0
+  flutter: 
+    sdk: flutter
+
+dev_dependencies: 
+  flutter_lints: ^2.0.0
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  assets: 
+    - assets/image/
+    - assets/icons/
+  uses-material-design: true
+

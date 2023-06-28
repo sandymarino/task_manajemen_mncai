@@ -68,21 +68,21 @@ class TaskView extends GetView<TaskController> {
                               ],
                             ),
                             const Spacer(),
-                            const Icon(
-                              Ionicons.notifications,
-                              color: AppColors.primaryText,
-                              size: 30,
-                            ),
+                            // const Icon(
+                            //   Ionicons.notifications,
+                            //   color: AppColors.primaryText,
+                            //   size: 30,
+                            // ),
                             const SizedBox(
                               width: 15,
                             ),
                             ClipRRect(
                               borderRadius: BorderRadius.circular(30),
-                              child: const CircleAvatar(
+                              child: CircleAvatar(
                                 backgroundColor: Colors.amber,
                                 radius: 25,
                                 foregroundImage: NetworkImage(
-                                    'https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/09/27/08/jennifer-lawrence.jpg?quality=75&width=982&height=726&auto=webp'),
+                                    authCon.auth.currentUser!.photoURL!),
                               ),
                             )
                           ],

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:task_management_app/app/utils/widget/PeopleYouWayKnow.dart';
 import 'package:task_management_app/app/utils/widget/SideBar.dart';
+import '../../../data/controller/auth_controller.dart';
 import '../../../utils/style/AppColors.dart';
 import '../../../utils/widget/Header.dart';
 import '../../../utils/widget/MyFriends.dart';
@@ -11,6 +13,8 @@ import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   final GlobalKey<ScaffoldState> drawerKey = GlobalKey();
+
+  final authConn = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -66,21 +70,21 @@ class HomeView extends GetView<HomeController> {
                                 ],
                               ),
                               const Spacer(),
-                              const Icon(
-                                Ionicons.notifications,
-                                color: AppColors.primaryText,
-                                size: 30,
-                              ),
+                              // const Icon(
+                              //   Ionicons.notifications,
+                              //   color: AppColors.primaryText,
+                              //   size: 30,
+                              // ),
                               const SizedBox(
                                 width: 15,
                               ),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(30),
-                                child: const CircleAvatar(
+                                child: CircleAvatar(
                                   backgroundColor: Colors.amber,
                                   radius: 25,
                                   foregroundImage: NetworkImage(
-                                      'https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/09/27/08/jennifer-lawrence.jpg?quality=75&width=982&height=726&auto=webp'),
+                                      authConn.auth.currentUser!.photoURL!),
                                 ),
                               )
                             ],
@@ -108,9 +112,9 @@ class HomeView extends GetView<HomeController> {
                               height: Get.height * 0.35,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
+                                children:  [
                                   Text(
-                                    'My Task',
+                                    'People You May Know',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 30,
@@ -120,18 +124,30 @@ class HomeView extends GetView<HomeController> {
                                     height: 20,
                                   ),
                                   //my task apps
-                                  MyTask(),
+                                  PeopleYouMayKnow(),
                                 ],
                               ),
                             ),
-                            !context.isPhone
-                                ? Expanded(
-                                    child: Row(children: [
-                                      UpComingTask(),
-                                      MyFriends(),
-                                    ]),
-                                  )
-                                : const UpComingTask(),
+                            Column(
+                              children: [
+                                Text(
+                                  'My Task',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 30,
+                                  ),
+                                ),
+                                !context.isPhone
+                                    ? Expanded(
+                                  child: Row(children: [
+                                    MyTask(),
+                                    MyFriends(),
+                                  ]),
+                                )
+                                    : const MyTask(),
+                              ],
+                            )
+
                           ]),
                     ),
                   )

@@ -94,6 +94,40 @@ class AuthController extends GetxController {
     Get.offAllNamed(Routes.LOGIN);
   }
 
+  var mykataCari = [].obs;
+  var myhasilPencarian = [].obs;
+  void searchMyFriends(String Keyword, String id) async {
+
+    var users = firestore.collection('friends').doc(id);
+
+
+    // if (Keyword.isNotEmpty) {
+      final hasilQuery =  await users.get();
+          // .where('emailFriends', arrayContains: Keyword)
+          // .get();
+
+      // print(hasilQuery.);
+
+    //   if (hasilQuery['emailFriends'].isNotEmpty) {
+    //     for (var i = 0; i < hasilQuery['emailFriends'].length; i++) {
+    //       mykataCari.add(hasilQuery[i].data() as Map<String, dynamic>);
+    //     }
+    //   }
+    //   if (mykataCari.isNotEmpty) {
+    //     myhasilPencarian.value = [];
+    //     mykataCari.forEach((element) {
+    //       myhasilPencarian.add(element);
+    //     });
+    //     mykataCari.clear();
+    //   }
+    // } else {
+    //   mykataCari.value = [];
+    //   myhasilPencarian.value = [];
+    // }
+    // mykataCari.refresh();
+    // myhasilPencarian.refresh();
+  }
+
   var kataCari = [].obs;
   var hasilPencarian = [].obs;
   void searchFriends(String Keyword) async {
@@ -179,5 +213,9 @@ class AuthController extends GetxController {
 
   Stream<DocumentSnapshot<Map<String, dynamic>>> streamTask(String taskId) {
     return firestore.collection('task').doc(taskId).snapshots();
+  }
+
+  Future<void> deteleTask(taskId) async{
+    return await firestore.collection('task').doc(taskId).delete();
   }
 }

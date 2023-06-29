@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../../../data/controller/auth_controller.dart';
+import '../../../routes/app_pages.dart';
 import '../../../utils/style/AppColors.dart';
 import '../../../utils/widget/Header.dart';
 import '../../../utils/widget/SideBar.dart';
@@ -130,9 +131,9 @@ class TaskView extends GetView<TaskController> {
                                   }
                                   //get task ID
                                   var taskId = ((snapshot.data!.data()
-                                          as Map<String, dynamic>)['task_id'] ?? [])
-                                      as List;
-                                  print(taskId);
+                                          as Map<String, dynamic>)['task_id'] ??
+                                      []) as List;
+                                  print('test $taskId');
                                   return ListView.builder(
                                       itemCount: taskId.length,
                                       clipBehavior: Clip.antiAlias,
@@ -155,162 +156,191 @@ class TaskView extends GetView<TaskController> {
                                               var dataTask =
                                                   snapshot2.data!.data();
 
-                                              //data user photo
-                                              var dataUserList = ((dataTask
-                                                      as Map<String, dynamic>)[
-                                                  'asign_to'] ?? []) as List;
+                                              if (dataTask != null) {
+                                                //data user photo
+                                                var dataUserList = ((dataTask
+                                                            as Map<String,
+                                                                dynamic>)[
+                                                        'asign_to'] ??
+                                                    []) as List;
 
-                                              return GestureDetector(
-                                                onTap: () {
-                                                  Get.defaultDialog(
-                                                    title: dataTask['title'],
-                                                    content:
-                                                    Row(
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      children: [
-                                                        TextButton.icon(onPressed: (){},
-                                                        icon: Icon(Ionicons.pencil),
-                                                        label: Text('Update')),
-                                                  TextButton.icon(onPressed: (){},
-                                                  icon: Icon(Ionicons.trash),
-                                                  label: Text('Delete')),
-                                                      ],
-                                                    )
-                                                  );
-
-                                                },
-                                                child: Container(
-                                                  height: 200,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                    color: AppColors.primaryBox,
-                                                  ),
-                                                  margin: EdgeInsets.all(10),
-                                                  padding: EdgeInsets.all(20),
-                                                  child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Row(
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    Get.defaultDialog(
+                                                        title:
+                                                            dataTask['title'],
+                                                        content: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
                                                           children: [
-                                                            SizedBox(
-                                                              height: 50,
-                                                              child: Expanded(
-                                                                child: ListView
-                                                                    .builder(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .zero,
-                                                                  itemCount:
-                                                                      dataUserList
-                                                                          .length,
-                                                                  scrollDirection:
-                                                                      Axis.horizontal,
-                                                                  shrinkWrap:
-                                                                      true,
-                                                                  physics:
-                                                                      ScrollPhysics(),
-                                                                  itemBuilder:
-                                                                      (context,
-                                                                          index2) {
-                                                                    return StreamBuilder<
-                                                                            DocumentSnapshot<
-                                                                                Map<String,
-                                                                                    dynamic>>>(
-                                                                        stream: authCon.streamUsers(dataUserList[
-                                                                            index2]),
-                                                                        builder:
-                                                                            (context,
-                                                                                snapshot3) {
-                                                                          if (snapshot2.connectionState ==
-                                                                              ConnectionState.waiting) {
-                                                                            return const Center(child: CircularProgressIndicator());
-                                                                          }
-                                                                          //data user photo
-                                                                          var dataUserImage = snapshot3
-                                                                              .data!
-                                                                              .data();
+                                                            TextButton.icon(
+                                                                onPressed: () {
+                                                                  print('abc ${taskId[index]}');
+                                                                  Get.toNamed(Routes
+                                                                      .TASK_DETAIL, arguments: [
+                                                                    {"index": taskId[index]},
+                                                                  ]);
+                                                                },
+                                                                icon: Icon(
+                                                                    Ionicons
+                                                                        .pencil),
+                                                                label: Text(
+                                                                    'Update')),
+                                                            TextButton.icon(
+                                                                onPressed: () {
+                                                                  authCon.deteleTask(
+                                                                      taskId[
+                                                                          index]);
+                                                                  Get.snackbar(
+                                                                      "Task",
+                                                                      "Task successfuly deleted");
+                                                                  Navigator.of(
+                                                                          context,
+                                                                          rootNavigator:
+                                                                              true)
+                                                                      .pop();
+                                                                },
+                                                                icon: Icon(
+                                                                    Ionicons
+                                                                        .trash),
+                                                                label: Text(
+                                                                    'Delete')),
+                                                          ],
+                                                        ));
+                                                  },
+                                                  child: Container(
+                                                    height: 200,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20),
+                                                      color:
+                                                          AppColors.primaryBox,
+                                                    ),
+                                                    margin: EdgeInsets.all(10),
+                                                    padding: EdgeInsets.all(20),
+                                                    child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 50,
+                                                                child: Expanded(
+                                                                  child: ListView
+                                                                      .builder(
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .zero,
+                                                                    itemCount:
+                                                                        dataUserList
+                                                                            .length,
+                                                                    scrollDirection:
+                                                                        Axis.horizontal,
+                                                                    shrinkWrap:
+                                                                        true,
+                                                                    physics:
+                                                                        ScrollPhysics(),
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                            index2) {
+                                                                      return StreamBuilder<
+                                                                              DocumentSnapshot<Map<String, dynamic>>>(
+                                                                          stream: authCon.streamUsers(dataUserList[index2]),
+                                                                          builder: (context, snapshot3) {
+                                                                            if (snapshot2.connectionState ==
+                                                                                ConnectionState.waiting) {
+                                                                              return const Center(child: CircularProgressIndicator());
+                                                                            }
+                                                                            //data user photo
+                                                                            var dataUserImage =
+                                                                                snapshot3.data!.data();
 
-                                                                          return ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(25),
-                                                                            child:
-                                                                                CircleAvatar(
-                                                                              radius: 20,
-                                                                              foregroundImage: NetworkImage(dataUserImage!['photo']),
-                                                                            ),
-                                                                          );
-                                                                        });
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            const Spacer(),
-                                                            Container(
-                                                              height: 25,
-                                                              width: 80,
-                                                              decoration: BoxDecoration(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20),
-                                                                  color: const Color
-                                                                          .fromARGB(
-                                                                      255,
-                                                                      80,
-                                                                      80,
-                                                                      80)),
-                                                              child: Center(
-                                                                child: Text(
-                                                                  '${dataTask['status']}%',
-                                                                  style:
-                                                                      const TextStyle(
-                                                                    color: Colors
-                                                                        .white,
+                                                                            return ClipRRect(
+                                                                              borderRadius: BorderRadius.circular(25),
+                                                                              child: CircleAvatar(
+                                                                                radius: 20,
+                                                                                foregroundImage: NetworkImage(dataUserImage!['photo']),
+                                                                              ),
+                                                                            );
+                                                                          });
+                                                                    },
                                                                   ),
                                                                 ),
                                                               ),
+                                                              const Spacer(),
+                                                              Container(
+                                                                height: 25,
+                                                                width: 80,
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            20),
+                                                                    color: const Color
+                                                                            .fromARGB(
+                                                                        255,
+                                                                        80,
+                                                                        80,
+                                                                        80)),
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    '${dataTask['status']}%',
+                                                                    style:
+                                                                        const TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Spacer(),
+                                                          Container(
+                                                            height: 25,
+                                                            width: 80,
+                                                            color: const Color
+                                                                    .fromARGB(
+                                                                255,
+                                                                80,
+                                                                80,
+                                                                80),
+                                                            child: Center(
+                                                              child: Text(
+                                                                  '${dataTask['total_task_finished']} / ${dataTask['total_task']} Task',
+                                                                  style: const TextStyle(
+                                                                      color: Colors
+                                                                          .white)),
                                                             ),
-                                                          ],
-                                                        ),
-                                                        Spacer(),
-                                                        Container(
-                                                          height: 25,
-                                                          width: 80,
-                                                          color: const Color
-                                                                  .fromARGB(
-                                                              255, 80, 80, 80),
-                                                          child: Center(
-                                                            child: Text(
-                                                                '${dataTask['total_task_finished']} / ${dataTask['total_task']} Task',
-                                                                style: const TextStyle(
-                                                                    color: Colors
-                                                                        .white)),
                                                           ),
-                                                        ),
-                                                        Text(
-                                                          dataTask['title'],
-                                                          style:
-                                                              const TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 20,
+                                                          Text(
+                                                            dataTask['title'],
+                                                            style:
+                                                                const TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 20,
+                                                            ),
                                                           ),
-                                                        ),
-                                                        Text(
-                                                          dataTask[
-                                                              'description'],
-                                                          style:
-                                                              const TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 15,
+                                                          Text(
+                                                            dataTask[
+                                                                'description'],
+                                                            style:
+                                                                const TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 15,
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ]),
-                                                ),
-                                              );
+                                                        ]),
+                                                  ),
+                                                );
+                                              } else {
+                                                return Container();
+                                              }
                                             });
                                       });
                                 },
@@ -321,20 +351,17 @@ class TaskView extends GetView<TaskController> {
               ])),
         ]),
       ),
-        floatingActionButton:
-        Align(
-          alignment: Alignment(0.95, 0.95),
-          child: FloatingActionButton.extended(
-            onPressed: () {
-              addEditTask(context: context, type: 'Add', docId: '');
-            },
-            label: Text('Add Task'),
-            icon: Icon(Ionicons.add),
-          ),
+      floatingActionButton: Align(
+        alignment: Alignment(0.95, 0.95),
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            addEditTask(context: context, type: 'Add', docId: '');
+          },
+          label: Text('Add Task'),
+          icon: Icon(Ionicons.add),
         ),
+      ),
     );
-
-
   }
 
   addEditTask({BuildContext? context, String? type, String? docId}) {
@@ -416,7 +443,7 @@ class TaskView extends GetView<TaskController> {
                       ),
                     ),
                     controller: controller.dueDateController,
-                    validator: (Value)  {
+                    validator: (Value) {
                       if (Value == null || Value.isEmpty) {
                         return 'Cant be empty';
                       }

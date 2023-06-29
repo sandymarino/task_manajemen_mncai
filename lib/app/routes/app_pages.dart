@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:task_management_app/app/modules/task/bindings/task_detail_binding.dart';
+import 'package:task_management_app/app/modules/task/views/task_detail.dart';
 
 import '../modules/friends/bindings/friends_binding.dart';
 import '../modules/friends/views/friends_view.dart';
@@ -51,6 +53,13 @@ class AppPages {
       name: _Paths.PROFILE,
       page: () => ProfileView(),
       binding: ProfileBinding(),
+      transition: Transition.leftToRightWithFade,
+      transitionDuration: Duration(seconds: 1),
+    ),
+    GetPage(
+      name: _Paths.TASK_DETAIL,
+      page: () => TaskDetail(),
+      binding: TaskDetailBinding(),
       transition: Transition.leftToRightWithFade,
       transitionDuration: Duration(seconds: 1),
     ),

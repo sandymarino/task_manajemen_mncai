@@ -8,6 +8,8 @@ abstract class Routes {
   static const TASK = _Paths.TASK;
   static const FRIENDS = _Paths.FRIENDS;
   static const PROFILE = _Paths.PROFILE;
+  static const TASK_DETAIL = _Paths.TASK_DETAIL;
+
 }
 
 abstract class _Paths {
@@ -17,4 +19,5 @@ abstract class _Paths {
   static const TASK = '/task';
   static const FRIENDS = '/friends';
   static const PROFILE = '/profile';
+  static const TASK_DETAIL = '/taskDetail';
 }

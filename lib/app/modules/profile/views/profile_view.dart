@@ -37,7 +37,7 @@ class ProfileView extends GetView<ProfileController> {
                   !context.isPhone
                       ? const header()
                       : Container(
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           child: Row(
                             children: [
                               IconButton(
@@ -75,14 +75,14 @@ class ProfileView extends GetView<ProfileController> {
                                   Get.defaultDialog(
                                     title: 'Sign Out',
                                     content:
-                                        Text('Are you sure want to sign out?'),
+                                        const Text('Are you sure want to sign out?'),
                                     cancel: ElevatedButton(
                                       onPressed: () => Get.back(),
-                                      child: Text('Cancel'),
+                                      child: const Text('Cancel'),
                                     ),
                                     confirm: ElevatedButton(
                                       onPressed: () => authConn.logout(),
-                                      child: Text('Sign Out'),
+                                      child: const Text('Sign Out'),
                                     ),
                                   );
                                 },

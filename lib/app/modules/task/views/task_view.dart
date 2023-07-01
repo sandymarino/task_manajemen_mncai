@@ -20,7 +20,7 @@ class TaskView extends GetView<TaskController> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: drawerKey,
-      drawer: SizedBox(width: 150, child: const SideBar()),
+      drawer: const SizedBox(width: 150, child: SideBar()),
       backgroundColor: AppColors.primaryBg,
       body: SafeArea(
         child: Row(children: [
@@ -133,7 +133,7 @@ class TaskView extends GetView<TaskController> {
                                   var taskId = ((snapshot.data!.data()
                                           as Map<String, dynamic>)['task_id'] ??
                                       []) as List;
-                                  print('test $taskId');
+
                                   return ListView.builder(
                                       itemCount: taskId.length,
                                       clipBehavior: Clip.antiAlias,
@@ -164,6 +164,11 @@ class TaskView extends GetView<TaskController> {
                                                         'asign_to'] ??
                                                     []) as List;
 
+                                                var date = DateTime.parse(
+                                                    dataTask['due_date']);
+                                                var deadlineDate = diffInDays(
+                                                    DateTime.now(), date);
+
                                                 return GestureDetector(
                                                   onTap: () {
                                                     Get.defaultDialog(
@@ -176,16 +181,20 @@ class TaskView extends GetView<TaskController> {
                                                           children: [
                                                             TextButton.icon(
                                                                 onPressed: () {
-                                                                  print('abc ${taskId[index]}');
-                                                                  Get.toNamed(Routes
-                                                                      .TASK_DETAIL, arguments: [
-                                                                    {"index": taskId[index]},
-                                                                  ]);
+                                                                  Get.toNamed(
+                                                                      Routes
+                                                                          .TASK_DETAIL,
+                                                                      arguments: [
+                                                                        {
+                                                                          "index":
+                                                                              taskId[index]
+                                                                        },
+                                                                      ]);
                                                                 },
-                                                                icon: Icon(
+                                                                icon: const Icon(
                                                                     Ionicons
                                                                         .pencil),
-                                                                label: Text(
+                                                                label: const Text(
                                                                     'Update')),
                                                             TextButton.icon(
                                                                 onPressed: () {
@@ -201,10 +210,10 @@ class TaskView extends GetView<TaskController> {
                                                                               true)
                                                                       .pop();
                                                                 },
-                                                                icon: Icon(
+                                                                icon: const Icon(
                                                                     Ionicons
                                                                         .trash),
-                                                                label: Text(
+                                                                label: const Text(
                                                                     'Delete')),
                                                           ],
                                                         ));
@@ -243,7 +252,7 @@ class TaskView extends GetView<TaskController> {
                                                                     shrinkWrap:
                                                                         true,
                                                                     physics:
-                                                                        ScrollPhysics(),
+                                                                        const ScrollPhysics(),
                                                                     itemBuilder:
                                                                         (context,
                                                                             index2) {
@@ -326,8 +335,7 @@ class TaskView extends GetView<TaskController> {
                                                             ),
                                                           ),
                                                           Text(
-                                                            dataTask[
-                                                                'description'],
+                                                            'Deadline $deadlineDate hari lagi',
                                                             style:
                                                                 const TextStyle(
                                                               color:
@@ -352,13 +360,13 @@ class TaskView extends GetView<TaskController> {
         ]),
       ),
       floatingActionButton: Align(
-        alignment: Alignment(0.95, 0.95),
+        alignment: const Alignment(0.95, 0.95),
         child: FloatingActionButton.extended(
           onPressed: () {
             addEditTask(context: context, type: 'Add', docId: '');
           },
-          label: Text('Add Task'),
-          icon: Icon(Ionicons.add),
+          label: const Text('Add Task'),
+          icon: const Icon(Ionicons.add),
         ),
       ),
     );
@@ -368,7 +376,7 @@ class TaskView extends GetView<TaskController> {
     Get.bottomSheet(
       SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+          padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
           margin: context!.isPhone
               ? EdgeInsets.zero
               : const EdgeInsets.only(
@@ -412,7 +420,7 @@ class TaskView extends GetView<TaskController> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextFormField(
                     keyboardType: TextInputType.multiline,
                     maxLines: 5,
@@ -478,4 +486,10 @@ class TaskView extends GetView<TaskController> {
       ),
     );
   }
+}
+
+int diffInDays(DateTime from, DateTime to) {
+  from = DateTime(from.year, from.month, from.day);
+  to = DateTime(to.year, to.month, to.day);
+  return (to.difference(from).inHours / 24).round();
 }

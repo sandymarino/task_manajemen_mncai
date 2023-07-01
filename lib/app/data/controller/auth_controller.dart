@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:task_management_app/app/routes/app_pages.dart';
+
+import '../../model/ListTileModel.dart';
 
 class AuthController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -96,47 +99,51 @@ class AuthController extends GetxController {
 
   var mykataCari = [].obs;
   var myhasilPencarian = [].obs;
-  void searchMyFriends(String Keyword, String id) async {
+  void searchMyFriends(String Keyword) async {
 
-    var users = firestore.collection('friends').doc(id);
+    var users =  firestore.collection('friends');
 
 
-    // if (Keyword.isNotEmpty) {
-      final hasilQuery =  await users.get();
-          // .where('emailFriends', arrayContains: Keyword)
-          // .get();
+    if (Keyword.isNotEmpty) {
+      final hasilQuery = await users
+      // .where('emailFriends', arrayContains: Keyword)
+          .get();
 
-      // print(hasilQuery.);
 
-    //   if (hasilQuery['emailFriends'].isNotEmpty) {
-    //     for (var i = 0; i < hasilQuery['emailFriends'].length; i++) {
-    //       mykataCari.add(hasilQuery[i].data() as Map<String, dynamic>);
-    //     }
-    //   }
-    //   if (mykataCari.isNotEmpty) {
-    //     myhasilPencarian.value = [];
-    //     mykataCari.forEach((element) {
-    //       myhasilPencarian.add(element);
-    //     });
-    //     mykataCari.clear();
-    //   }
-    // } else {
-    //   mykataCari.value = [];
-    //   myhasilPencarian.value = [];
-    // }
-    // mykataCari.refresh();
-    // myhasilPencarian.refresh();
+      hasilQuery.docs.forEach((element) {
+        // print(element.id);
+        if (element.id == auth.currentUser!.email) {
+          var data = element.data()['emailFriends'] as List;
+          myhasilPencarian.clear();
+          data.forEach((item) {
+            if (item.contains(Keyword)) {
+              myhasilPencarian.add(item);
+            }
+          });
+        }
+      });
+    }else{
+      mykataCari.clear();
+      myhasilPencarian.clear();
+    }
+
+
+    mykataCari.refresh();
+    myhasilPencarian.refresh();
+
   }
 
   var kataCari = [].obs;
   var hasilPencarian = [].obs;
   void searchFriends(String Keyword) async {
     CollectionReference users = firestore.collection('users');
+
     if (Keyword.isNotEmpty) {
       final hasilQuery = await users
           .where('list_cari', arrayContains: Keyword.toUpperCase())
           .get();
-      print(hasilQuery.docs.length);
+
+      //print(hasilQuery.docs.length);
       if (hasilQuery.docs.isNotEmpty) {
         for (var i = 0; i < hasilQuery.docs.length; i++) {
           kataCari.add(hasilQuery.docs[i].data() as Map<String, dynamic>);
@@ -211,11 +218,70 @@ class AuthController extends GetxController {
     return hasil;
   }
 
+  Future<List<ListTileModel>> getDetailTask(String taskId) async {
+
+    List<ListTileModel> data = [];
+    var item = await firestore.collection('task').doc(taskId).get();
+    var dataUserList = ((item)[
+    'task_detail'] ??
+        []) as List;
+
+    dataUserList.forEach((element) {
+      var item = ListTileModel.fromJson(element);
+      data.add(item);
+    });
+
+    return data;
+  }
+
   Stream<DocumentSnapshot<Map<String, dynamic>>> streamTask(String taskId) {
     return firestore.collection('task').doc(taskId).snapshots();
   }
 
   Future<void> deteleTask(taskId) async{
     return await firestore.collection('task').doc(taskId).delete();
+  }
+
+  void updateUserTask(String id, String email) async{
+    await firestore.collection('users').doc(email)
+        .set({
+      'task_id': FieldValue.arrayUnion([id])
+    }, SetOptions(merge: true));
+  }
+
+  void saveEmail(String id, String email) async {
+
+    firestore.collection('task').doc(id)
+        .set({
+      'asign_to': FieldValue.arrayUnion([email])
+    }, SetOptions(merge: true)).whenComplete(() => updateUserTask(id, email));
+  }
+
+  void saveTask(String id, List<ListTileModel> task) async {
+
+    final List<Map<String, dynamic>> mapList = task.map(
+            (s) => {'check': s.enabled, 'text': s.text, 'index': s.index}
+    ).toList();
+
+    var isCheck = 0;
+    task.forEach((element) {
+      if(element.enabled!){
+        isCheck = isCheck + 1;
+      }
+    });
+
+    firestore.collection('task').doc(id)
+        .set({
+      'task_detail': []
+    }, SetOptions(merge: true));
+
+    firestore.collection('task').doc(id)
+        .set({
+      'task_detail': FieldValue.arrayUnion(mapList),
+      'total_task_finished': isCheck,
+      'total_task': task.length,
+      'status': ((isCheck/task.length) * 100)
+    }, SetOptions(merge: true)).whenComplete(() => Get.offAllNamed(Routes.TASK)
+    );
   }
 }

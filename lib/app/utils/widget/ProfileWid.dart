@@ -34,7 +34,7 @@ class ProfileWid extends StatelessWidget {
                         authConn.auth.currentUser!.displayName!,
                         style: const TextStyle(
                           color: Colors.black,
-                          fontSize: 50,
+                          fontSize: 40,
                         ),
                       ),
                       Text(
@@ -63,7 +63,7 @@ class ProfileWid extends StatelessWidget {
                           NetworkImage(authConn.auth.currentUser!.photoURL!),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,14 +72,14 @@ class ProfileWid extends StatelessWidget {
                         authConn.auth.currentUser!.displayName!,
                         style: const TextStyle(
                           color: Colors.black,
-                          fontSize: 40,
+                          fontSize: 30,
                         ),
                       ),
                       Text(
                         authConn.auth.currentUser!.email!,
                         style: const TextStyle(
                           color: Colors.black,
-                          fontSize: 16,
+                          fontSize: 20,
                         ),
                       ),
                     ],

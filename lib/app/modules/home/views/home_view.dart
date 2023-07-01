@@ -113,14 +113,14 @@ class HomeView extends GetView<HomeController> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children:  [
-                                  Text(
+                                  const Text(
                                     'People You May Know',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 30,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 20,
                                   ),
                                   //my task apps
@@ -130,7 +130,7 @@ class HomeView extends GetView<HomeController> {
                             ),
                             Column(
                               children: [
-                                Text(
+                                const Text(
                                   'My Task',
                                   style: TextStyle(
                                     color: Colors.black,
@@ -147,7 +147,6 @@ class HomeView extends GetView<HomeController> {
                                     : const MyTask(),
                               ],
                             )
-
                           ]),
                     ),
                   )

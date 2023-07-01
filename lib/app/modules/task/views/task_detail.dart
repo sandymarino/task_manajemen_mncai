@@ -19,7 +19,7 @@ class _TaskDetailState extends State<TaskDetail> {
   final GlobalKey<ScaffoldState> drawerKey = GlobalKey();
   final authCon = Get.find<AuthController>();
 
-  var args = Get.arguments[0]['index'];
+  var arrayEmail = [];
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +101,7 @@ class _TaskDetailState extends State<TaskDetail> {
                           context.isPhone
                               ? TextField(
                                   onChanged: (Value) =>
-                                      authCon.searchMyFriends(Value, args),
+                                      authCon.searchMyFriends(Value),
                                   controller: authCon.searchFriendsController,
                                   decoration: InputDecoration(
                                     filled: true,
@@ -146,16 +146,20 @@ class _TaskDetailState extends State<TaskDetail> {
                   ),
                   child: Obx(
                     () => authCon.myhasilPencarian.isEmpty
-                        ? Container()
+                        ? TaskList(arrayEmail)
                         : ListView.builder(
                             padding: EdgeInsets.all(8),
                             shrinkWrap: true,
                             itemCount: authCon.myhasilPencarian.length,
                             itemBuilder: (context, index) {
-                              print(authCon
-                                  .myhasilPencarian[index]['emailFriends']);
-                              return Text(authCon
-                                  .myhasilPencarian[index]['emailFriends'][0]
+                              return GestureDetector(
+                                onTap: (){
+                                  arrayEmail.add(authCon.myhasilPencarian[index]);
+                                  authCon.searchMyFriends("");
+                                },
+                                child: Text(authCon
+                                    .myhasilPencarian[index]
+                                ),
                               );
                             }),
                   ),

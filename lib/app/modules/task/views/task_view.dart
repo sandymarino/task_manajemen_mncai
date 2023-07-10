@@ -296,7 +296,7 @@ class TaskView extends GetView<TaskController> {
                                                                         80)),
                                                                 child: Center(
                                                                   child: Text(
-                                                                    '${dataTask['status']}%',
+                                                                    '${double.parse(dataTask['status'].toString()).round()}%',
                                                                     style:
                                                                         const TextStyle(
                                                                       color: Colors

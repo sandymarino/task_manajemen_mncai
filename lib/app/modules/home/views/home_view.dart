@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:task_management_app/app/utils/widget/PeopleYouWayKnow.dart';
 import 'package:task_management_app/app/utils/widget/SideBar.dart';
 import '../../../data/controller/auth_controller.dart';
+import '../../../routes/app_pages.dart';
 import '../../../utils/style/AppColors.dart';
 import '../../../utils/widget/Header.dart';
 import '../../../utils/widget/MyFriends.dart';
@@ -109,10 +111,10 @@ class HomeView extends GetView<HomeController> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              height: Get.height * 0.35,
+                              height: Get.height * 0.30,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children:  [
+                                children: [
                                   const Text(
                                     'People You May Know',
                                     style: TextStyle(
@@ -128,24 +130,26 @@ class HomeView extends GetView<HomeController> {
                                 ],
                               ),
                             ),
-                            Column(
-                              children: [
-                                const Text(
-                                  'My Task',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 30,
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  const Text(
+                                    'My Task',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 30,
+                                    ),
                                   ),
-                                ),
-                                !context.isPhone
-                                    ? Expanded(
-                                  child: Row(children: [
-                                    MyTask(),
-                                    MyFriends(),
-                                  ]),
-                                )
-                                    : const MyTask(),
-                              ],
+                                  !context.isPhone
+                                      ? Expanded(
+                                          child: Row(children: [
+                                            MyTask(),
+                                            MyFriends(),
+                                          ]),
+                                        )
+                                      : MyTask(),
+                                ],
+                              ),
                             )
                           ]),
                     ),
@@ -156,4 +160,10 @@ class HomeView extends GetView<HomeController> {
           ),
         ));
   }
+}
+
+int diffInDays(DateTime from, DateTime to) {
+  from = DateTime(from.year, from.month, from.day);
+  to = DateTime(to.year, to.month, to.day);
+  return (to.difference(from).inHours / 24).round();
 }

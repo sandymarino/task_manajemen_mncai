@@ -25,6 +25,7 @@ class _TaskDetailState extends State<TaskDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: drawerKey,
+      resizeToAvoidBottomInset: false,
       drawer: SizedBox(width: 150, child: const SideBar()),
       backgroundColor: AppColors.primaryBg,
       body: SafeArea(
@@ -122,7 +123,7 @@ class _TaskDetailState extends State<TaskDetail> {
                                       Icons.search,
                                       color: Colors.black,
                                     ),
-                                    hintText: 'Search',
+                                    hintText: 'Search Your Friends',
                                   ),
                                 )
                               : const SizedBox(),
@@ -153,12 +154,21 @@ class _TaskDetailState extends State<TaskDetail> {
                             itemCount: authCon.myhasilPencarian.length,
                             itemBuilder: (context, index) {
                               return GestureDetector(
-                                onTap: (){
-                                  arrayEmail.add(authCon.myhasilPencarian[index]);
+                                onTap: () {
+                                  arrayEmail
+                                      .add(authCon.myhasilPencarian[index]);
                                   authCon.searchMyFriends("");
+                                  authCon.searchFriendsController.text = "";
                                 },
-                                child: Text(authCon
-                                    .myhasilPencarian[index]
+                                child: Container(
+                                  color: AppColors.primaryBg,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      authCon.myhasilPencarian[index],
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
                                 ),
                               );
                             }),

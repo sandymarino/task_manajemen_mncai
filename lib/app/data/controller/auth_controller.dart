@@ -100,15 +100,12 @@ class AuthController extends GetxController {
   var mykataCari = [].obs;
   var myhasilPencarian = [].obs;
   void searchMyFriends(String Keyword) async {
-
-    var users =  firestore.collection('friends');
-
+    var users = firestore.collection('friends');
 
     if (Keyword.isNotEmpty) {
       final hasilQuery = await users
-      // .where('emailFriends', arrayContains: Keyword)
+          // .where('emailFriends', arrayContains: Keyword)
           .get();
-
 
       hasilQuery.docs.forEach((element) {
         // print(element.id);
@@ -122,15 +119,13 @@ class AuthController extends GetxController {
           });
         }
       });
-    }else{
+    } else {
       mykataCari.clear();
       myhasilPencarian.clear();
     }
 
-
     mykataCari.refresh();
     myhasilPencarian.refresh();
-
   }
 
   var kataCari = [].obs;
@@ -209,22 +204,18 @@ class AuthController extends GetxController {
 
     listFriends.add(auth.currentUser!.email);
 
-
     QuerySnapshot<Map<String, dynamic>> hasil = await firestore
         .collection('users')
-        .where('email', whereNotIn:  listFriends)
+        .where('email', whereNotIn: listFriends)
         .get();
 
     return hasil;
   }
 
   Future<List<ListTileModel>> getDetailTask(String taskId) async {
-
     List<ListTileModel> data = [];
     var item = await firestore.collection('task').doc(taskId).get();
-    var dataUserList = ((item)[
-    'task_detail'] ??
-        []) as List;
+    var dataUserList = ((item)['task_detail'] ?? []) as List;
 
     dataUserList.forEach((element) {
       var item = ListTileModel.fromJson(element);
@@ -238,50 +229,45 @@ class AuthController extends GetxController {
     return firestore.collection('task').doc(taskId).snapshots();
   }
 
-  Future<void> deteleTask(taskId) async{
+  Future<void> deteleTask(taskId) async {
     return await firestore.collection('task').doc(taskId).delete();
   }
 
-  void updateUserTask(String id, String email) async{
-    await firestore.collection('users').doc(email)
-        .set({
+  void updateUserTask(String id, String email) async {
+    await firestore.collection('users').doc(email).set({
       'task_id': FieldValue.arrayUnion([id])
     }, SetOptions(merge: true));
   }
 
   void saveEmail(String id, String email) async {
-
-    firestore.collection('task').doc(id)
-        .set({
+    firestore.collection('task').doc(id).set({
       'asign_to': FieldValue.arrayUnion([email])
     }, SetOptions(merge: true)).whenComplete(() => updateUserTask(id, email));
   }
 
   void saveTask(String id, List<ListTileModel> task) async {
-
-    final List<Map<String, dynamic>> mapList = task.map(
-            (s) => {'check': s.enabled, 'text': s.text, 'index': s.index}
-    ).toList();
+    final List<Map<String, dynamic>> mapList = task
+        .map((s) => {'check': s.enabled, 'text': s.text, 'index': s.index})
+        .toList();
 
     var isCheck = 0;
     task.forEach((element) {
-      if(element.enabled!){
+      if (element.enabled!) {
         isCheck = isCheck + 1;
       }
     });
 
-    firestore.collection('task').doc(id)
-        .set({
-      'task_detail': []
-    }, SetOptions(merge: true));
+    firestore
+        .collection('task')
+        .doc(id)
+        .set({'task_detail': []}, SetOptions(merge: true));
 
-    firestore.collection('task').doc(id)
-        .set({
+    firestore.collection('task').doc(id).set({
       'task_detail': FieldValue.arrayUnion(mapList),
       'total_task_finished': isCheck,
       'total_task': task.length,
-      'status': ((isCheck/task.length) * 100)
-    }, SetOptions(merge: true)).whenComplete(() => Get.offAllNamed(Routes.TASK)
-    );
+      'status': ((isCheck / task.length) * 100)
+    }, SetOptions(merge: true)).whenComplete(
+        () => Get.offAllNamed(Routes.TASK));
   }
 }

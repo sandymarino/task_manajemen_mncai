@@ -24,6 +24,7 @@ class _TaskListState extends State<TaskList> {
 
   String input = "";
   int i = 0;
+  var addTextController = TextEditingController();
 
   final authCon = Get.find<AuthController>();
 
@@ -65,26 +66,32 @@ class _TaskListState extends State<TaskList> {
   Widget build(BuildContext context) {
     var email = widget.arrayEmail as List;
     Widget getTextWidgets(List<dynamic> strings) {
-      return new Column(
-          children: strings.map((item) => new Text(item)).toList());
+      return Column(
+          children: strings
+              .map((item) => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Align(
+                        alignment: Alignment.centerLeft, child: Text(item)),
+                  ))
+              .toList());
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           getTextWidgets(email),
           ListView(
             shrinkWrap: true,
-            padding: EdgeInsets.all(28.0),
+            padding: const EdgeInsets.all(10.0),
             children: <Widget>[
-              SizedBox(height: 30),
               Row(
                 children: <Widget>[
-                  const SizedBox(width: 0.2),
                   SizedBox(
-                    width: 200,
+                    width: Get.width * 0.55,
                     child: TextField(
                         textAlign: TextAlign.left,
+                        controller: addTextController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(138.0)),
@@ -94,7 +101,7 @@ class _TaskListState extends State<TaskList> {
                           input = val;
                         }),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 20),
                   SizedBox(
                     width: 80,
                     child: Material(
@@ -104,10 +111,11 @@ class _TaskListState extends State<TaskList> {
                       child: MaterialButton(
                         onPressed: () {
                           _add(getIndex());
+                          addTextController.text = "";
                         },
                         child: const Text('ADD',
                             style: TextStyle(
-                                color: Colors.lightGreen, fontSize: 15)),
+                                color: Colors.blueAccent, fontSize: 15)),
                       ),
                     ),
                   ),

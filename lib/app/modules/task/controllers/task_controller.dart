@@ -14,6 +14,7 @@ class TaskController extends GetxController {
 
   late TextEditingController titleController,
       descriptionController,
+      searchFriendsTaskController,
       dueDateController;
 
   @override
@@ -22,6 +23,7 @@ class TaskController extends GetxController {
     titleController = TextEditingController();
     descriptionController = TextEditingController();
     dueDateController = TextEditingController();
+    searchFriendsTaskController = TextEditingController();
   }
 
   @override
